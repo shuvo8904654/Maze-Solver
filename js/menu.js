@@ -1,9 +1,7 @@
 "use strict";
 
 function hidden_clear() {
-    for (var i = 0; i < timeouts.length; i++) {
-        clearTimeout(timeouts[i]);
-    }
+    for (var i = 0; i < timeouts.length; i++) { clearTimeout(timeouts[i]); }
     timeouts = [];
     cancelAnimationFrame(my_interval);
     clearInterval(my_interval);
@@ -26,17 +24,14 @@ function menu_event_listeners() {
         var start_temp = [start_pos[0], start_pos[1]];
         var target_temp = [target_pos[0], target_pos[1]];
         clear();
-
         var oldStart = place_to_cell(start_pos[0], start_pos[1]);
         if (oldStart) oldStart.classList.remove("start");
         var newStart = place_to_cell(start_temp[0], start_temp[1]);
         if (newStart) newStart.classList.add("start");
-
         var oldTarget = place_to_cell(target_pos[0], target_pos[1]);
         if (oldTarget) oldTarget.classList.remove("target");
         var newTarget = place_to_cell(target_temp[0], target_temp[1]);
         if (newTarget) newTarget.classList.add("target");
-
         start_pos = start_temp;
         target_pos = target_temp;
     });
@@ -46,7 +41,7 @@ function menu_event_listeners() {
         solveBtn.addEventListener("click", function () {
             generating = false;
             clear_grid();
-            if (typeof maze_solvers === "function") maze_solvers();
+            maze_solvers();
         });
     }
 }
