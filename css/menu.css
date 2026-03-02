@@ -24,3 +24,116 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
+
+.choice {
+    padding: 18px 24px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.choice_label {
+    display: block;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+}
+
+.select {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.select svg {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    stroke: var(--primary-color);
+    stroke-width: 3px;
+    fill: none;
+    pointer-events: none;
+}
+
+.select select {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 12px 40px 12px 14px;
+    width: 100%;
+    border: var(--border-bold);
+    border-radius: 0;
+    background: var(--bg-menu);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-main);
+    font-weight: 700;
+    transition: none;
+}
+
+.select select:focus {
+    outline: none;
+    background: var(--primary-color);
+    color: var(--primary-hover);
+}
+
+.button_row {
+    padding: 8px 24px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.my_button {
+    padding: 14px;
+    width: 100%;
+    border: var(--border-bold);
+    border-radius: 0;
+    background: var(--bg-menu);
+    color: var(--text-main);
+    font-weight: 900;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: none;
+}
+
+.my_button:hover,
+.my_button:focus-visible {
+    background: var(--primary-color);
+    color: var(--primary-hover);
+    outline: none;
+}
+
+#play {
+    background: var(--primary-color);
+    color: var(--primary-hover);
+}
+
+#play:hover,
+#play:focus-visible {
+    background: var(--bg-menu);
+    color: var(--text-main);
+    outline: none;
+}
+
+.button_group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 0 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.button_group button {
+    flex: 1;
+    margin-bottom: 0px !important;
+}

@@ -135,3 +135,69 @@ function get_node(x, y) {
     }
     return -2;
 }
+
+
+function visualizer_event_listeners() {
+    var gridEl = document.getElementById("grid");
+
+    function handle_cell_interaction(cell) {
+        if (!cell || !cell.classList.contains("cell")) return;
+        var place = cell_to_place(cell);
+        var x = place[0], y = place[1];
+
+        if (moving_start) {
+            if (!cell.classList.contains("cell_wall") && !cell.classList.contains("target")) {
+                var oldStart = place_to_cell(start_pos[0], start_pos[1]);
+                if (oldStart) oldStart.classList.remove("start");
+                start_pos = [x, y];
+                cell.classList.add("start");
+            }
+            return;
+        }
+
+        if (moving_target) {
+            if (!cell.classList.contains("cell_wall") && !cell.classList.contains("start")) {
+                var oldTarget = place_to_cell(target_pos[0], target_pos[1]);
+                if (oldTarget) oldTarget.classList.remove("target");
+                target_pos = [x, y];
+                cell.classList.add("target");
+            }
+            return;
+        }
+
+        if (cell.classList.contains("start") || cell.classList.contains("target")) return;
+
+        if (grid[x][y] === -1) {
+            remove_wall(x, y);
+        } else {
+            add_wall(x, y);
+        }
+    }
+
+    gridEl.addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        var cell = event.target;
+        if (!cell.classList.contains("cell")) return;
+        clicking = true;
+        if (cell.classList.contains("start")) {
+            moving_start = true;
+        } else if (cell.classList.contains("target")) {
+            moving_target = true;
+        } else {
+            handle_cell_interaction(cell);
+        }
+    });
+
+    gridEl.addEventListener("mousemove", function (event) {
+        if (!clicking) return;
+        var cell = event.target;
+        if (!cell.classList.contains("cell")) return;
+        handle_cell_interaction(cell);
+    });
+
+    document.addEventListener("mouseup", function () {
+        clicking = false;
+        moving_start = false;
+        moving_target = false;
+    });
+}

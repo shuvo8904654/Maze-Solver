@@ -25,4 +25,6 @@ window.onload = function () {
     init_css_properties_before();
     generate_grid();
     init_css_properties_after();
+    visualizer_event_listeners();
+    menu_event_listeners();
 };

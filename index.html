@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script type="text/javascript" src="js/properties.js"></script>
+	<script type="text/javascript" src="js/menu.js"></script>
 	<script type="text/javascript" src="js/visualizer.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 </head>
@@ -23,6 +24,26 @@
 	<div id="menu" role="navigation" aria-label="Controls">
 		<div id="menu_title_div">
 			<span id="menu_title">Maze Solver</span>
+		</div>
+
+		<div class="choice" id="choice_1">
+			<label class="choice_label" id="choice_label_1" for="slct_1">Solving Algorithm</label>
+			<div class="select">
+				<select id="slct_1" aria-label="Select solving algorithm">
+					<option value="1" selected>Breadth-First Search</option>
+				</select>
+				<svg viewBox="0 0 10 6" aria-hidden="true">
+					<polyline points="1 1 5 5 9 1"></polyline>
+				</svg>
+			</div>
+		</div>
+
+		<div class="button_group">
+			<button class="my_button" id="play" aria-label="Start visualization">Visualize!</button>
+		</div>
+
+		<div class="button_row" id="button_1">
+			<button class="my_button" id="clear" aria-label="Clear the grid">Clear Grid</button>
 		</div>
 	</div>
 
