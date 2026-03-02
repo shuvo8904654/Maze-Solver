@@ -1,0 +1,52 @@
+#grid {
+    background-color: #ffffff;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    border: 2px solid #000000;
+    overflow: hidden;
+    outline: none;
+    cursor: crosshair;
+}
+
+#my_table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+}
+
+.cell {
+    z-index: 5;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: none;
+}
+
+.cell_1 {
+    background-color: #ffffff;
+}
+
+.cell_2 {
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+}
+
+.cell_wall {
+    background-color: #000000;
+    z-index: 6;
+}
+
+.start {
+    background-image: url(../resources/shapes/start.svg);
+    background-size: 80% 80%;
+}
+
+.target {
+    background-image: url(../resources/shapes/target.svg);
+    background-size: 80% 80%;
+}
