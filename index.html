@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script type="text/javascript" src="js/properties.js"></script>
+	<script type="text/javascript" src="js/maze_generators.js"></script>
 	<script type="text/javascript" src="js/maze_solvers.js"></script>
 	<script type="text/javascript" src="js/menu.js"></script>
 	<script type="text/javascript" src="js/visualizer.js"></script>
@@ -44,6 +45,25 @@
 
 		<div class="button_group">
 			<button class="my_button" id="play" aria-label="Start visualization">Visualize!</button>
+		</div>
+
+		<div class="choice" id="choice_2">
+			<label class="choice_label" id="choice_label_2" for="slct_2">Generation Algorithm</label>
+			<div class="select">
+				<select id="slct_2" required="required" aria-label="Select generation algorithm">
+					<option selected value="0">Manual / Custom</option>
+					<option value="1">Randomized DFS</option>
+					<option value="3">Prim's</option>
+				</select>
+				<svg viewBox="0 0 10 6" aria-hidden="true">
+					<polyline points="1 1 5 5 9 1"></polyline>
+				</svg>
+			</div>
+		</div>
+
+		<div class="choice" id="choice_3">
+			<label class="choice_label" for="speed_slider">Simulation Speed</label>
+			<input type="range" id="speed_slider" min="1" max="100" value="50" aria-label="Simulation speed">
 		</div>
 
 		<div class="button_row" id="button_1">
