@@ -35,7 +35,9 @@ function MinHeap(compareFn) {
     this.compare = compareFn;
 }
 
-MinHeap.prototype.size = function () { return this.data.length; };
+MinHeap.prototype.size = function () {
+    return this.data.length;
+};
 
 MinHeap.prototype.push = function (val) {
     this.data.push(val);
@@ -45,11 +47,16 @@ MinHeap.prototype.push = function (val) {
 MinHeap.prototype.pop = function () {
     var top = this.data[0];
     var bottom = this.data.pop();
-    if (this.data.length > 0) { this.data[0] = bottom; this._sinkDown(0); }
+    if (this.data.length > 0) {
+        this.data[0] = bottom;
+        this._sinkDown(0);
+    }
     return top;
 };
 
-MinHeap.prototype.peek = function () { return this.data[0]; };
+MinHeap.prototype.peek = function () {
+    return this.data[0];
+};
 
 MinHeap.prototype._bubbleUp = function (idx) {
     var element = this.data[idx];
@@ -66,22 +73,69 @@ MinHeap.prototype._bubbleUp = function (idx) {
 MinHeap.prototype._sinkDown = function (idx) {
     var length = this.data.length;
     var element = this.data[idx];
+
     while (true) {
         var leftIdx = 2 * idx + 1;
         var rightIdx = 2 * idx + 2;
         var smallest = idx;
-        if (leftIdx < length && this.compare(this.data[leftIdx], this.data[smallest]) < 0) smallest = leftIdx;
-        if (rightIdx < length && this.compare(this.data[rightIdx], this.data[smallest]) < 0) smallest = rightIdx;
+
+        if (leftIdx < length && this.compare(this.data[leftIdx], this.data[smallest]) < 0) {
+            smallest = leftIdx;
+        }
+        if (rightIdx < length && this.compare(this.data[rightIdx], this.data[smallest]) < 0) {
+            smallest = rightIdx;
+        }
         if (smallest === idx) break;
+
         this.data[idx] = this.data[smallest];
         this.data[smallest] = element;
         idx = smallest;
     }
 };
 
+function UnionFind(size) {
+    this.parent = new Array(size);
+    this.rank = new Array(size);
+    this.count = size;
+    for (var i = 0; i < size; i++) {
+        this.parent[i] = i;
+        this.rank[i] = 0;
+    }
+}
+
+UnionFind.prototype.find = function (x) {
+    while (this.parent[x] !== x) {
+        this.parent[x] = this.parent[this.parent[x]];
+        x = this.parent[x];
+    }
+    return x;
+};
+
+UnionFind.prototype.union = function (a, b) {
+    var rootA = this.find(a);
+    var rootB = this.find(b);
+    if (rootA === rootB) return false;
+
+    if (this.rank[rootA] < this.rank[rootB]) {
+        this.parent[rootA] = rootB;
+    } else if (this.rank[rootA] > this.rank[rootB]) {
+        this.parent[rootB] = rootA;
+    } else {
+        this.parent[rootB] = rootA;
+        this.rank[rootA]++;
+    }
+    this.count--;
+    return true;
+};
+
+UnionFind.prototype.connected = function (a, b) {
+    return this.find(a) === this.find(b);
+};
+
 function reconstruct_path(target, start) {
     var path_list = [];
     var current_node = target;
+
     while (current_node[0] !== start[0] || current_node[1] !== start[1]) {
         switch (grid[current_node[0]][current_node[1]]) {
             case 1: current_node = [current_node[0], current_node[1] + 1]; break;
@@ -92,6 +146,7 @@ function reconstruct_path(target, start) {
         }
         path_list.push(current_node);
     }
+
     path_list.pop();
     path_list.reverse();
     return path_list;
