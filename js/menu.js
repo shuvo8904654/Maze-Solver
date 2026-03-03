@@ -41,3 +41,7 @@ function menu_event_listeners() {
         visualization_speed = parseInt(event.target.value, 10);
     });
 }
+
+    document.getElementById("slct_cursor").addEventListener("change", function () {
+        current_tool = this.value;
+    });

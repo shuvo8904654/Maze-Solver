@@ -28,6 +28,19 @@
 			<span id="menu_title">Maze Solver</span>
 		</div>
 
+		<div class="choice" id="choice_cursor">
+			<label class="choice_label" for="slct_cursor">Cursor Tool</label>
+			<div class="select">
+				<select id="slct_cursor" aria-label="Select cursor tool">
+					<option selected value="wall">Wall Tool</option>
+					<option value="weight">Weight Tool (Cost: 5)</option>
+				</select>
+				<svg viewBox="0 0 10 6" aria-hidden="true">
+					<polyline points="1 1 5 5 9 1"></polyline>
+				</svg>
+			</div>
+		</div>
+
 		<div class="choice" id="choice_1">
 			<label class="choice_label" id="choice_label_1" for="slct_1">Solving Algorithm</label>
 			<div class="select">
@@ -57,6 +70,7 @@
 					<option value="3">Prim's</option>
 					<option value="4">Wilson's</option>
 					<option value="5">Aldous-Broder</option>
+					<option value="6">Recursive Division</option>
 				</select>
 				<svg viewBox="0 0 10 6" aria-hidden="true">
 					<polyline points="1 1 5 5 9 1"></polyline>

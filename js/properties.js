@@ -9,6 +9,7 @@ var grid_size_y;
 var grid;
 var weights;
 var cell_cache;
+var current_tool = "wall";
 var clicking = false;
 var moving_start = false;
 var moving_target = false;
@@ -151,3 +152,4 @@ function reconstruct_path(target, start) {
     path_list.reverse();
     return path_list;
 }
+
