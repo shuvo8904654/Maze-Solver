@@ -163,6 +163,34 @@ function run_solver(type, silent) {
                 }
             }
         }
+    } else if (type === "9") { // randomized routing
+        frontier = [start_pos];
+        grid[start_pos[0]][start_pos[1]] = 1;
+        while (frontier.length > 0 && !results.found) {
+            var curr = frontier.pop();
+
+            if (curr[0] !== start_pos[0] || curr[1] !== start_pos[1]) {
+                results.nodes.push(curr);
+            }
+
+            if (curr[0] === target_pos[0] && curr[1] === target_pos[1]) {
+                results.found = true;
+                break;
+            }
+
+            var list = get_neighbours(curr, 1);
+            // shuffle the neighbors for a random path
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (get_node(list[i][0], list[i][1]) === 0) {
+                    frontier.push(list[i]);
+                    grid[list[i][0]][list[i][1]] = i + 1;
+                }
+            }
+        }
     } else if (type === "7" || type === "8") { // wall follower left/right
         var current = [start_pos[0], start_pos[1]];
         var directions = [[0, -1], [1, 0], [0, 1], [-1, 0]]; // Up, Right, Down, Left
@@ -379,6 +407,15 @@ function wall_follower(type) {
 
 
 
+function randomized_routing() {
+    var res = run_solver("9", false);
+    node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
+    maze_solvers_interval();
+}
+
+
+
 function maze_solvers() {
     clear_grid();
     
@@ -407,6 +444,8 @@ function maze_solvers() {
         case "6": depth_first(); break;
         case "7": wall_follower("7"); break;
         case "8": wall_follower("8"); break;
+        case "9": randomized_routing(); break;
         
     }
 }
+

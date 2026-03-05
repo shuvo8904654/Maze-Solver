@@ -604,8 +604,8 @@ function maze_generators() {
         case "4": wilson_algorithm(); break;
         case "5": aldous_broder_algorithm(); break;
         case "6": recursive_division(); break;
-        
-        
+        case "7": hunt_and_kill_algorithm(); break;
+        case "10": sidewinder_algorithm(); break;
     }
 }
 
