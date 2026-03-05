@@ -19,6 +19,27 @@ body {
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* Menu toggle button for mobile */
+#menu_toggle {
+	display: none;
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	z-index: 20;
+	background: var(--menu-bg);
+	border: var(--border);
+	font-size: 20px;
+	padding: 6px 12px;
+	cursor: pointer;
+	color: var(--text-color);
+	font-weight: 700;
+}
+
+#menu_toggle:hover {
+	background: var(--text-color);
+	color: var(--menu-bg);
+}
+
 #menu {
 	background: var(--menu-bg);
 	position: fixed;
@@ -36,6 +57,10 @@ body {
 	transition: transform 0.3s ease;
 }
 
+#menu.collapsed {
+	transform: translateX(-100%);
+}
+
 #visualizer {
 	position: fixed;
 	top: 0;
@@ -45,6 +70,10 @@ body {
 	z-index: 1;
 	background-color: var(--menu-bg);
 	transition: left 0.3s ease;
+}
+
+#visualizer.expanded {
+	left: 0;
 }
 
 #hider {
@@ -81,4 +110,28 @@ body {
 #toast.show {
 	opacity: 1;
 	transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive: mobile */
+@media (max-width: 700px) {
+	:root {
+		--menu-width: 280px;
+	}
+
+	#menu_toggle {
+		display: block;
+	}
+
+	#menu {
+		width: var(--menu-width);
+		transform: translateX(-100%);
+	}
+
+	#menu.open {
+		transform: translateX(0);
+	}
+
+	#visualizer {
+		left: 0;
+	}
 }

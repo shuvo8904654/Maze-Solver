@@ -184,7 +184,14 @@ function get_node(x, y) {
 }
 
 
-
+function get_cell_from_touch(event) {
+    var touch = event.touches[0] || event.changedTouches[0];
+    var el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (el && el.classList.contains("cell")) {
+        return el;
+    }
+    return null;
+}
 
 function visualizer_event_listeners() {
     var gridEl = document.getElementById("grid");
@@ -268,7 +275,22 @@ function visualizer_event_listeners() {
         moving_target = false;
     });
 
-    
+    // --- Touch events ---
+    gridEl.addEventListener("touchstart", function (event) {
+        event.preventDefault();
+        var cell = get_cell_from_touch(event);
+        if (!cell) return;
+
+        clicking = true;
+
+        if (cell.classList.contains("start")) {
+            moving_start = true;
+        } else if (cell.classList.contains("target")) {
+            moving_target = true;
+        } else {
+            handle_cell_interaction(cell);
+        }
+    }, { passive: false });
 
     gridEl.addEventListener("touchmove", function (event) {
         event.preventDefault();
