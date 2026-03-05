@@ -42,7 +42,7 @@ This visualizer uses absolutely zero external libraries or dependencies.
 To run it:
 1. Clone the repository or download the source code.
 2. Open `index.html` in any modern web browser.
-3. Everything runs locally—no server required!
+3. Everything runs locally, no server required!
 
 ## UI Details
 
