@@ -15,44 +15,47 @@ function maze_solvers_interval() {
     var _done = false;
 
     function tick() {
-        if (_done) return;
-        
+        if (_done || (is_paused && !step_clicked)) return;
+        step_clicked = false;
 
         if (!path) {
             if (node_list_index < node_list.length) {
                 place_to_cell(node_list[node_list_index][0], node_list[node_list_index][1]).classList.add("cell_algo");
                 node_list_index++;
-                            }
+                if (node_list_index % (102 - visualization_speed) === 0) playSound('node'); // throttle sound based on speed
+            }
 
             if (node_list_index === node_list.length) {
                 if (!found) {
                     _done = true;
-                    
-                    
-                    
-                    
-                    
+                    var elapsed = Date.now() - solve_start_time;
+                    update_stats(node_list.length, 0, elapsed, 0);
+                    show_toast("No path found!");
+                    playSound('error');
+                    toggle_playback_ui(false);
                     return;
                 } else {
                     path = true;
                     place_to_cell(start_pos[0], start_pos[1]).classList.add("cell_path");
-                    
+                    playSound('path');
                 }
             }
         } else {
             if (path_list_index === path_list.length) {
                 place_to_cell(target_pos[0], target_pos[1]).classList.add("cell_path");
                 _done = true;
-                
-                                
-                
-                
+                var elapsed = Date.now() - solve_start_time;
+                // add sound when completely finished showing path
+                playSound('click');
+                update_stats(node_list.length, path_list.length + 2, elapsed, total_cost);
+                toggle_playback_ui(false);
                 return;
             }
 
             place_to_cell(path_list[path_list_index][0], path_list[path_list_index][1]).classList.add("cell_path");
             path_list_index++;
-                    }
+            if (path_list_index % Math.max(1, Math.floor((102 - visualization_speed) / 4)) === 0) playSound('finding');
+        }
     }
 
     var last_time = 0;
@@ -128,34 +131,6 @@ function run_solver(type, silent) {
             }
 
             var list = get_neighbours(curr, 1);
-            for (var i = 0; i < list.length; i++) {
-                if (get_node(list[i][0], list[i][1]) === 0) {
-                    frontier.push(list[i]);
-                    grid[list[i][0]][list[i][1]] = i + 1;
-                }
-            }
-        }
-    } else if (type === "9") { // randomized routing
-        frontier = [start_pos];
-        grid[start_pos[0]][start_pos[1]] = 1;
-        while (frontier.length > 0 && !results.found) {
-            var curr = frontier.pop();
-
-            if (curr[0] !== start_pos[0] || curr[1] !== start_pos[1]) {
-                results.nodes.push(curr);
-            }
-
-            if (curr[0] === target_pos[0] && curr[1] === target_pos[1]) {
-                results.found = true;
-                break;
-            }
-
-            var list = get_neighbours(curr, 1);
-            // shuffle the neighbors for a random path
-            for (let i = list.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [list[i], list[j]] = [list[j], list[i]];
-            }
             for (var i = 0; i < list.length; i++) {
                 if (get_node(list[i][0], list[i][1]) === 0) {
                     frontier.push(list[i]);
@@ -309,14 +284,14 @@ function breadth_first() {
     node_list_index = 0;
     path_list_index = 0;
     path = false;
-    
+    solve_start_time = Date.now();
     maze_solvers_interval();
 }
 
 function bidirectional_breadth_first() {
 
     node_list = []; node_list_index = 0; path_list = []; path_list_index = 0; found = false; path = false;
-    
+    solve_start_time = Date.now();
     var s_e, t_e;
     var frontier = [start_pos, target_pos];
     var head = 0;
@@ -367,45 +342,37 @@ function bidirectional_breadth_first() {
 function greedy_best_first() {
     var res = run_solver("3", false);
     node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
-    node_list_index = 0; path_list_index = 0; path = false; 
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
     maze_solvers_interval();
 }
 
 function dijkstra() {
     var res = run_solver("4", false);
     node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
-    node_list_index = 0; path_list_index = 0; path = false; 
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
     maze_solvers_interval();
 }
 
 function a_star() {
     var res = run_solver("5", false);
     node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
-    node_list_index = 0; path_list_index = 0; path = false; 
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
     maze_solvers_interval();
 }
 
 function depth_first() {
     var res = run_solver("6", false);
     node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
-    node_list_index = 0; path_list_index = 0; path = false; 
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
     maze_solvers_interval();
 }
 
 function wall_follower(type) {
     var res = run_solver(type, false);
     node_list = res.nodes; path_list = res.path; found = res.found; total_cost = res.cost;
-    node_list_index = 0; path_list_index = 0; path = false; 
+    node_list_index = 0; path_list_index = 0; path = false; solve_start_time = Date.now();
     maze_solvers_interval();
 }
-
-
-
-
-
-
-
-
 
 function randomized_routing() {
     var res = run_solver("9", false);
@@ -416,23 +383,45 @@ function randomized_routing() {
 
 
 
+function compare_all_algorithms() {
+    var algos = [
+        { id: "1", name: "BFS" },
+        { id: "3", name: "Greedy BF" },
+        { id: "4", name: "Dijkstra" },
+        { id: "5", name: "A* Search" },
+        { id: "6", name: "DFS" },
+        { id: "7", name: "Wall Follower (L)" },
+        { id: "8", name: "Wall Follower (R)" },
+        { id: "9", name: "Randomized" }
+    ];
+
+    var results = algos.map(a => {
+        var res = run_solver(a.id, true);
+        return { name: a.name, visited: res.nodes.length, path: res.path.length + 2, cost: res.cost, time: res.time };
+    });
+
+    show_comparison_modal(results);
+}
+
+
+
 function maze_solvers() {
     clear_grid();
-    
+    reset_stats();
     grid_clean = false;
-    
-    
+    is_paused = false;
+    step_clicked = false;
 
     if ((Math.abs(start_pos[0] - target_pos[0]) === 0 && Math.abs(start_pos[1] - target_pos[1]) === 1) ||
         (Math.abs(start_pos[0] - target_pos[0]) === 1 && Math.abs(start_pos[1] - target_pos[1]) === 0)) {
         place_to_cell(start_pos[0], start_pos[1]).classList.add("cell_path");
         place_to_cell(target_pos[0], target_pos[1]).classList.add("cell_path");
-        
+        update_stats(0, 2, 0, weights[start_pos[0]][start_pos[1]] + weights[target_pos[0]][target_pos[1]]);
         return;
         }
 
-    
-    
+    toggle_playback_ui(true);
+    playSound('start');
 
     var solver_value = document.getElementById("slct_1").value;
     switch (solver_value) {
@@ -445,7 +434,5 @@ function maze_solvers() {
         case "7": wall_follower("7"); break;
         case "8": wall_follower("8"); break;
         case "9": randomized_routing(); break;
-        
     }
 }
-

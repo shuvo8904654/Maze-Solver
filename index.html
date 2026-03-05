@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+	<meta property="og:image" content="https://i.imgur.com/k7YnNTK.png" />
+	<meta property="og:image:width" content="1948" />
+	<meta property="og:image:height" content="1080" />
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -9,12 +13,14 @@
 		content="Interactive maze solver visualizer with multiple pathfinding and maze generation algorithms.">
 
 	<title>Maze Solver</title>
+	<link rel="shortcut icon" type="image/png" href="resources/images/Favicon.png" />
 
 	<link rel="stylesheet" type="text/css" href="css/menu.css" />
 	<link rel="stylesheet" type="text/css" href="css/grid.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script type="text/javascript" src="js/properties.js"></script>
+	
 	<script type="text/javascript" src="js/maze_generators.js"></script>
 	<script type="text/javascript" src="js/maze_solvers.js"></script>
 	<script type="text/javascript" src="js/menu.js"></script>
@@ -23,6 +29,8 @@
 </head>
 
 <body>
+	
+
 	<div id="menu" role="navigation" aria-label="Controls">
 		<div id="menu_title_div">
 			<span id="menu_title">Maze Solver</span>
@@ -62,7 +70,15 @@
 		</div>
 
 		<div class="button_group">
+			<button id="btn_compare" class="my_button secondary_btn">Compare</button>
 			<button class="my_button" id="play" aria-label="Start visualization">Visualize!</button>
+		</div>
+
+		<div id="playback_controls" style="display: none;">
+			<div class="button_group">
+				<button id="btn_pause" class="my_button secondary_btn" title="Pause/Resume">Pause</button>
+				<button id="btn_step" class="my_button" title="Step Forward">Step</button>
+			</div>
 		</div>
 
 		<div class="choice" id="choice_2">
@@ -93,10 +109,95 @@
 		<div class="button_row" id="button_1">
 			<button class="my_button" id="clear" aria-label="Clear the grid">Clear Grid</button>
 		</div>
+
+		<div id="stats_dashboard">
+			<div class="stat_item">
+				<span class="stat_label">Visited:</span>
+				<span id="stat_visited" class="stat_value">-</span>
+			</div>
+			<div class="stat_item">
+				<span class="stat_label">Path:</span>
+				<span id="stat_path" class="stat_value">-</span>
+			</div>
+			<div class="stat_item">
+				<span class="stat_label">Cost:</span>
+				<span id="stat_cost" class="stat_value">-</span>
+			</div>
+			<div class="stat_item">
+				<span class="stat_label">Time:</span>
+				<span id="stat_time" class="stat_value">-</span>
+			</div>
+		</div>
+
+		<div class="legend_divider"></div>
+
+		<div id="legend">
+			<div class="legend_item">
+				<div class="legend_color"
+					style="background: url(resources/shapes/start.svg) center/contain no-repeat; filter: brightness(0); border: none;">
+				</div>
+				<span>Start Node</span>
+			</div>
+			<div class="legend_item">
+				<div class="legend_color"
+					style="background: url(resources/shapes/target.svg) center/contain no-repeat; filter: brightness(0); border: none;">
+				</div>
+				<span>Target Node</span>
+			</div>
+			<div class="legend_item">
+				<div class="legend_color cell_algo" aria-hidden="true"></div>
+				<span>Visited Node</span>
+			</div>
+			<div class="legend_item">
+				<div class="legend_color cell_wall" style="border: none;" aria-hidden="true"></div>
+				<span>Wall</span>
+			</div>
+			<div class="legend_item">
+				<div class="legend_color legend_path" aria-hidden="true"></div>
+				<span>Shortest Path</span>
+			</div>
+			<div class="legend_item">
+				<div class="legend_color legend_weight" aria-hidden="true"></div>
+				<span>Weight (Cost: 5)</span>
+			</div>
+		</div>
+
+		<div class="menu_footer">
+			<button id="btn_export" class="minimal_btn">Export Maze</button>
+			<button id="btn_import" class="minimal_btn">Import Maze</button>
+		</div>
 	</div>
 
 	<div id="visualizer" role="main" aria-label="Maze grid visualization">
 		<div id="grid" tabindex="0" aria-label="Interactive maze grid"></div>
+	</div>
+
+	<div id="toast"></div>
+
+
+	<div id="compare_modal" class="modal">
+		<div class="modal_content">
+			<div class="modal_header">
+				<h2>Algorithm Comparison</h2>
+				<button class="close_modal">&times;</button>
+			</div>
+			<div class="modal_body">
+				<table class="compare_table">
+					<thead>
+						<tr>
+							<th>Algorithm</th>
+							<th>Visited</th>
+							<th>Path</th>
+							<th>Cost</th>
+							<th>Time</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </body>
 

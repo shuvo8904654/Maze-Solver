@@ -1,15 +1,17 @@
 "use strict";
 
+
 var initial_max_grid_size = 47;
 var menu_width = 323;
+
 
 var cell_size;
 var grid_size_x;
 var grid_size_y;
 var grid;
-var weights;
-var cell_cache;
-var current_tool = "wall";
+var weights; // 2d array storing cost values (1 for normal, 5 for weight)
+var current_tool = "wall"; // "wall"
+var cell_cache; // 2d array caching DOM references for performance
 var clicking = false;
 var moving_start = false;
 var moving_target = false;
@@ -18,17 +20,23 @@ var target_pos;
 var grid_clean = true;
 var my_interval;
 
+
 var node_list;
 var node_list_index;
 var path_list;
 var path_list_index;
 var found = false;
 var path = false;
+var solve_start_time = 0;
 var total_cost = 0;
+
+var is_paused = false;
+var step_clicked = false;
 
 var generating = false;
 var timeouts = [];
 var visualization_speed = 50;
+var menu_open = false;
 var is_mobile = false;
 
 function MinHeap(compareFn) {
@@ -106,7 +114,7 @@ function UnionFind(size) {
 
 UnionFind.prototype.find = function (x) {
     while (this.parent[x] !== x) {
-        this.parent[x] = this.parent[this.parent[x]];
+        this.parent[x] = this.parent[this.parent[x]]; // path compression
         x = this.parent[x];
     }
     return x;
@@ -133,6 +141,33 @@ UnionFind.prototype.connected = function (a, b) {
     return this.find(a) === this.find(b);
 };
 
+var _toast_timeout;
+function show_toast(message) {
+    var el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add("show");
+    clearTimeout(_toast_timeout);
+    _toast_timeout = setTimeout(function () {
+        el.classList.remove("show");
+    }, 3000);
+}
+
+function update_stats(visited, pathLen, timeMs, cost) {
+    var elVisited = document.getElementById("stat_visited");
+    var elPath = document.getElementById("stat_path");
+    var elTime = document.getElementById("stat_time");
+    var elCost = document.getElementById("stat_cost");
+    if (elVisited) elVisited.textContent = visited >= 0 ? visited : "-";
+    if (elPath) elPath.textContent = pathLen >= 0 ? pathLen : "-";
+    if (elTime) elTime.textContent = timeMs >= 0 ? timeMs + "ms" : "-";
+    if (elCost) elCost.textContent = cost >= 0 ? cost : "-";
+}
+
+function reset_stats() {
+    update_stats(-1, -1, -1, -1);
+}
+
 function reconstruct_path(target, start) {
     var path_list = [];
     var current_node = target;
@@ -143,7 +178,7 @@ function reconstruct_path(target, start) {
             case 2: current_node = [current_node[0] - 1, current_node[1]]; break;
             case 3: current_node = [current_node[0], current_node[1] - 1]; break;
             case 4: current_node = [current_node[0] + 1, current_node[1]]; break;
-            default: return path_list;
+            default: return path_list; // safety: avoid infinite loop
         }
         path_list.push(current_node);
     }
@@ -152,4 +187,3 @@ function reconstruct_path(target, start) {
     path_list.reverse();
     return path_list;
 }
-
